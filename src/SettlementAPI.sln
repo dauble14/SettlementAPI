@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31829.152
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettlementAPI", "SettlementAPI\SettlementAPI.csproj", "{5411401E-CC8F-4C6A-93A4-FB1AE5817758}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5411401E-CC8F-4C6A-93A4-FB1AE5817758}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5411401E-CC8F-4C6A-93A4-FB1AE5817758}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5411401E-CC8F-4C6A-93A4-FB1AE5817758}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5411401E-CC8F-4C6A-93A4-FB1AE5817758}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {97C1F1A8-62B9-4C0C-A722-489AD8D2CD9C}
+	EndGlobalSection
+EndGlobal
