@@ -3,23 +3,20 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SettlementAPI.Migrations
 {
-    public partial class AddedUserProductsRelation : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "Settlements",
                 columns: table => new
                 {
-                    ProductId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Quantity = table.Column<double>(type: "float", nullable: false),
-                    FullPrice = table.Column<double>(type: "float", nullable: false)
+                    SettlementId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.ProductId);
+                    table.PrimaryKey("PK_Settlements", x => x.SettlementId);
                 });
 
             migrationBuilder.CreateTable(
@@ -41,23 +38,23 @@ namespace SettlementAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProducts",
+                name: "UserSettlement",
                 columns: table => new
                 {
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    SettlementId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserProducts", x => new { x.ProductId, x.UserId });
+                    table.PrimaryKey("PK_UserSettlement", x => new { x.UserId, x.SettlementId });
                     table.ForeignKey(
-                        name: "FK_UserProducts_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "ProductId",
+                        name: "FK_UserSettlement_Settlements_SettlementId",
+                        column: x => x.SettlementId,
+                        principalTable: "Settlements",
+                        principalColumn: "SettlementId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserProducts_Users_UserId",
+                        name: "FK_UserSettlement_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -65,18 +62,18 @@ namespace SettlementAPI.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserProducts_UserId",
-                table: "UserProducts",
-                column: "UserId");
+                name: "IX_UserSettlement_SettlementId",
+                table: "UserSettlement",
+                column: "SettlementId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "UserProducts");
+                name: "UserSettlement");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Settlements");
 
             migrationBuilder.DropTable(
                 name: "Users");

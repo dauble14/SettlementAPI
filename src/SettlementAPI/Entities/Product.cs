@@ -13,7 +13,7 @@ namespace SettlementAPI.Entities
         public double Quantity { get; set; }
         public double FullPrice { get; set; }
 
-        public ICollection<UserProduct> UserProducts { get; set; }
+        
 
 
     }

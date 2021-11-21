@@ -15,6 +15,6 @@ namespace SettlementAPI.Entities
         public string Nationality { get; set; }
         public string PasswordHash { get; set; }
 
-        public ICollection<UserProduct> UserProducts { get; set; }
+        
     }
 }

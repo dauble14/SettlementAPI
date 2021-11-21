@@ -10,8 +10,8 @@ using SettlementAPI.Entities;
 namespace SettlementAPI.Migrations
 {
     [DbContext(typeof(SettlementDbContext))]
-    [Migration("20211118173205_AddedUserProductsRelation")]
-    partial class AddedUserProductsRelation
+    [Migration("20211120143550_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,25 +21,16 @@ namespace SettlementAPI.Migrations
                 .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("SettlementAPI.Entities.Product", b =>
+            modelBuilder.Entity("SettlementAPI.Entities.Settlement", b =>
                 {
-                    b.Property<int>("ProductId")
+                    b.Property<int>("SettlementId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("FullPrice")
-                        .HasColumnType("float");
+                    b.HasKey("SettlementId");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Quantity")
-                        .HasColumnType("float");
-
-                    b.HasKey("ProductId");
-
-                    b.ToTable("Products");
+                    b.ToTable("Settlements");
                 });
 
             modelBuilder.Entity("SettlementAPI.Entities.User", b =>
@@ -72,48 +63,38 @@ namespace SettlementAPI.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("SettlementAPI.Entities.UserProduct", b =>
+            modelBuilder.Entity("SettlementAPI.Entities.UserSettlement", b =>
                 {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("ProductId", "UserId");
+                    b.Property<int>("SettlementId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("UserId");
+                    b.HasKey("UserId", "SettlementId");
 
-                    b.ToTable("UserProducts");
+                    b.HasIndex("SettlementId");
+
+                    b.ToTable("UserSettlement");
                 });
 
-            modelBuilder.Entity("SettlementAPI.Entities.UserProduct", b =>
+            modelBuilder.Entity("SettlementAPI.Entities.UserSettlement", b =>
                 {
-                    b.HasOne("SettlementAPI.Entities.Product", "Product")
-                        .WithMany("UserProducts")
-                        .HasForeignKey("ProductId")
+                    b.HasOne("SettlementAPI.Entities.Settlement", "Settlement")
+                        .WithMany()
+                        .HasForeignKey("SettlementId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SettlementAPI.Entities.User", "User")
-                        .WithMany("UserProducts")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
+                    b.Navigation("Settlement");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SettlementAPI.Entities.Product", b =>
-                {
-                    b.Navigation("UserProducts");
-                });
-
-            modelBuilder.Entity("SettlementAPI.Entities.User", b =>
-                {
-                    b.Navigation("UserProducts");
                 });
 #pragma warning restore 612, 618
         }
