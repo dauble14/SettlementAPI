@@ -6,13 +6,13 @@ using SettlementAPI.Entities;
 using System;
 using System.Threading.Tasks;
 
-namespace SettlementAPI.Core
+namespace SettlementAPI.Core.Repositories
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly SettlementDbContext _context;
         private readonly ILogger _logger;
-        public IUserRepository Users { get; private set; }
+        public IUserRepository Users { get;  set; }
 
         public UnitOfWork(
             SettlementDbContext context,
