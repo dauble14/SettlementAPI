@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SettlementAPI.Entities;
 
 namespace SettlementAPI.Migrations
 {
     [DbContext(typeof(SettlementDbContext))]
-    partial class SettlementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211124230823_added-identity-roles")]
+    partial class addedidentityroles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +50,15 @@ namespace SettlementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f9a4fda2-7917-4569-9027-56b7781c5b70",
-                            ConcurrencyStamp = "2b88cea6-528f-4867-9154-c6cba0ced5c2",
+                            Id = "a5ad964f-e06d-4cf7-9dcb-85cf4866dfba",
+                            ConcurrencyStamp = "0869fb01-b1d7-4b61-ac82-9ae9d44fa9b6",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "f67107b0-927a-415c-a3ca-ce9712b826ed",
-                            ConcurrencyStamp = "991fd721-e706-4ceb-b2aa-8565bcb8d0b1",
+                            Id = "3bbc84b7-f5fb-4200-a958-b82b41c28dad",
+                            ConcurrencyStamp = "980b4905-291b-477e-bb97-1e00055a77e1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -184,7 +186,7 @@ namespace SettlementAPI.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("SettlementAPI.Entities.ProductSettlement", b =>
@@ -207,14 +209,17 @@ namespace SettlementAPI.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ProductId", "SettlementId");
 
                     b.HasIndex("SettlementId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("ProductSettlement");
                 });
@@ -295,6 +300,9 @@ namespace SettlementAPI.Migrations
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -380,7 +388,7 @@ namespace SettlementAPI.Migrations
 
                     b.HasOne("SettlementAPI.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("Product");
 

@@ -9,12 +9,6 @@ namespace SettlementAPI.Core.IRepositories
     public interface IGenericRepository<T> where T : class
     {
         
-        //Task<IEnumerable<T>> All();
-        //Task<T> GetById(int id);
-        //Task<bool> Add(T entity);
-        //Task<bool> Delete(int id);
-        //Task<bool> Upsert(T entity);
-        
         Task<IList<T>> GetAll(
             Expression<Func<T, bool>> expression = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,

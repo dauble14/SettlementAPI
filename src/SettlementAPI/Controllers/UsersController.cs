@@ -26,44 +26,44 @@ namespace SettlementAPI.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateUser(User user)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    await _unitOfWork.Users.Insert(user);
-                    await _unitOfWork.CompleteAsync();
-                    //return CreatedAtAction("GetItem", new { user.UserId }, user);
-                    return Ok(user);
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest("dupa ");                    
+        //[HttpPost]
+        //public async Task<IActionResult> CreateUser(User user)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            await _unitOfWork.Users.Insert(user);
+        //            await _unitOfWork.CompleteAsync();
+        //            //return CreatedAtAction("GetItem", new { user.UserId }, user);
+        //            return Ok(user);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return BadRequest("dupa ");                    
                     
-                }
-            }
+        //        }
+        //    }
 
-            return new JsonResult("Something went wrong") { StatusCode = 500 };
-        }
+        //    return new JsonResult("Something went wrong") { StatusCode = 500 };
+        //}
 
-        [HttpGet]
-        public async Task<IActionResult> GetUsers()
-        {
-            try
-            {
-                var users = await  _unitOfWork.Users.GetAll();
-                var results = _mapper.Map<IList<UserDTO>>(users);
-                return Ok(results);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Something Went Wrong in the {nameof(GetUsers)}");
-                return StatusCode(500, "Internal Server Error. Please Try Again Later.");
+        //[HttpGet]
+        //public async Task<IActionResult> GetUsers()
+        //{
+        //    try
+        //    {
+        //        var users = await  _unitOfWork.Users.GetAll();
+        //        var results = _mapper.Map<IList<UserDTO>>(users);
+        //        return Ok(results);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Something Went Wrong in the {nameof(GetUsers)}");
+        //        return StatusCode(500, "Internal Server Error. Please Try Again Later.");
                 
-            }
-        }
+        //    }
+        //}
 
 
     }

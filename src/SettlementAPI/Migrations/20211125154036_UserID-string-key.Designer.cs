@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SettlementAPI.Entities;
 
 namespace SettlementAPI.Migrations
 {
     [DbContext(typeof(SettlementDbContext))]
-    partial class SettlementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211125154036_UserID-string-key")]
+    partial class UserIDstringkey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +50,15 @@ namespace SettlementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "f9a4fda2-7917-4569-9027-56b7781c5b70",
-                            ConcurrencyStamp = "2b88cea6-528f-4867-9154-c6cba0ced5c2",
+                            Id = "d4a74575-b2ae-4052-a45a-9b33aba83dd4",
+                            ConcurrencyStamp = "9cfc8082-20c8-4608-ae1c-f0491ca00853",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "f67107b0-927a-415c-a3ca-ce9712b826ed",
-                            ConcurrencyStamp = "991fd721-e706-4ceb-b2aa-8565bcb8d0b1",
+                            Id = "2c8cb373-d815-4b27-9448-2cd56bb326ac",
+                            ConcurrencyStamp = "496ee40e-162a-4806-b1b9-49b5192761a2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -184,7 +186,7 @@ namespace SettlementAPI.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("SettlementAPI.Entities.ProductSettlement", b =>

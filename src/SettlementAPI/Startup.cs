@@ -11,6 +11,7 @@ using SettlementAPI.Core;
 using SettlementAPI.Core.IConfiguration;
 using SettlementAPI.Core.Repositories;
 using SettlementAPI.Entities;
+using SettlementAPI.Services;
 
 namespace SettlementAPI
 {
@@ -19,7 +20,6 @@ namespace SettlementAPI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            
         }
 
         public IConfiguration Configuration { get; }
@@ -38,16 +38,19 @@ namespace SettlementAPI
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SettlementAPI", Version = "v1" });
             });
 
+            services.ConfigureIdentity();
+            services.ConfigureJWT(Configuration);
+
+
             services.AddAutoMapper(typeof(MapperInitilizer));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+            services.AddScoped<IAuthManager, AuthManager>();
+            services.AddScoped<ISettlementService, SettlementService>();
 
             services.AddControllers().AddNewtonsoftJson(op =>
                 op.SerializerSettings.ReferenceLoopHandling =
-                    Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-
-            
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -64,6 +67,7 @@ namespace SettlementAPI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

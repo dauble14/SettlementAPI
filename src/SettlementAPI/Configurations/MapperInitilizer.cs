@@ -13,6 +13,8 @@ namespace SettlementAPI.Configurations
         public MapperInitilizer()
         {
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, LoginUserDTO>().ReverseMap();
+            CreateMap<Settlement, SettlementDTO>().ReverseMap();
         }
     }
 }
