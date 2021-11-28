@@ -1,34 +1,43 @@
-﻿using SettlementAPI.Core.IConfiguration;
+﻿using AutoMapper;
+using SettlementAPI.Core.IConfiguration;
 using SettlementAPI.Entities;
 using SettlementAPI.Models;
 using SettlementAPI.Options;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace SettlementAPI.Services
 {
     public class SettlementService : ISettlementService
     {
-        private readonly IdentityOptions _identity;
         private readonly IUnitOfWork _unitOfWork;
-
-        public SettlementService(IdentityOptions identity, IUnitOfWork unitOfWork)
+        private readonly IdentityOptions _identity;
+        private readonly IMapper _mapper;
+        public SettlementService(
+            IUnitOfWork unitOfWork, 
+            IdentityOptions identity, 
+            IMapper mapper)
         {
-            _identity = identity;
             _unitOfWork = unitOfWork;
+            _identity = identity;
+            _mapper = mapper;
         }
-        
-        public Task<SettlementDTO> CreateAsync(SettlementDTO model)
+
+        public async Task<CreateSettlementDTO> CreateAsync(CreateSettlementDTO model)
         {
-            using(var ts = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            var settlement = new Settlement
             {
-                var settlement = new Settlement
-                {
-                    Amount = model.Amount,
-                    Currency = model.Currency,
-                    CreatedByUser = _identity.UserId    
-                };
-            }
+                Currency = model.Currency,
+                Amount = model.Amount,
+                UserId = "5f0269d8-1e86-447f-bab2-8eeb47e01e42"
+
+            };
+
+            await _unitOfWork.Settlements.Insert(settlement);
+            await _unitOfWork.CompleteAsync();
+            return model;
         }
     }
 }

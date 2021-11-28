@@ -12,7 +12,7 @@ namespace SettlementAPI.Entities
         public int Quantity { get; set; }
         public double Amount { get; set; }
         public string Currency { get; set; }
-        
+
         //user id
         [ForeignKey("User")]
         public string UserId { get; set; }

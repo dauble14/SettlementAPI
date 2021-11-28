@@ -1,7 +1,11 @@
-﻿namespace SettlementAPI.Options
+﻿using SettlementAPI.Entities;
+
+namespace SettlementAPI.Options
 {
     public class IdentityOptions
     {
-        public string UserId { get; set; }
+        
+        public string UserMail { get; set; }
+        
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SettlementAPI.Entities;
 
 namespace SettlementAPI.Migrations
 {
     [DbContext(typeof(SettlementDbContext))]
-    partial class SettlementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211127160927_deleted-usedid-in-productsettlement")]
+    partial class deletedusedidinproductsettlement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +50,15 @@ namespace SettlementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eeefd931-9e80-491e-aad4-9cae4e04298f",
-                            ConcurrencyStamp = "2cee5083-ed0f-4620-a6e1-18bafb7b351a",
+                            Id = "825a9e9c-9a7f-4a01-911f-f434101d9748",
+                            ConcurrencyStamp = "c18a8357-c053-4968-9b84-634a99436363",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "cb1eb20e-ff5c-4252-8a0f-d2c73aeba043",
-                            ConcurrencyStamp = "05c76b18-8370-463b-94b9-154f15a774be",
+                            Id = "3e458d57-ebc7-4425-9fbc-a3cb9425cb68",
+                            ConcurrencyStamp = "6be4a81a-0c49-460e-bf5f-8c9d245693aa",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -229,15 +231,15 @@ namespace SettlementAPI.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("float");
 
+                    b.Property<string>("CreatedByUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("SettlementId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("CreatedByUserId");
 
                     b.ToTable("Settlements");
                 });
@@ -393,7 +395,7 @@ namespace SettlementAPI.Migrations
                 {
                     b.HasOne("SettlementAPI.Entities.User", "CreatedByUser")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("CreatedByUserId");
 
                     b.Navigation("CreatedByUser");
                 });

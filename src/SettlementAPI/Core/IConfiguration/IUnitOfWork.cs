@@ -6,6 +6,7 @@ namespace SettlementAPI.Core.IConfiguration
     public interface IUnitOfWork
     {
         //IUserRepository Users { get; }
+        ISettlementRepository Settlements {get;}
         Task CompleteAsync();
     }
 }

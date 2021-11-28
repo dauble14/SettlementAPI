@@ -14,6 +14,8 @@ namespace SettlementAPI.Configurations
         {
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, LoginUserDTO>().ReverseMap();
+            CreateMap<Product, ProductDTO>().ReverseMap();
+            CreateMap<Settlement, CreateSettlementDTO>().ReverseMap();
             CreateMap<Settlement, SettlementDTO>().ReverseMap();
         }
     }

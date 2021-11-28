@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,7 @@ using SettlementAPI.Core.IConfiguration;
 using SettlementAPI.Core.Repositories;
 using SettlementAPI.Entities;
 using SettlementAPI.Services;
+using System.Security.Claims;
 
 namespace SettlementAPI
 {
@@ -30,6 +32,7 @@ namespace SettlementAPI
             services.AddDbContext<SettlementDbContext>(o => 
                 o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
+            
 
 
             services.AddControllers();
@@ -50,7 +53,19 @@ namespace SettlementAPI
 
             services.AddControllers().AddNewtonsoftJson(op =>
                 op.SerializerSettings.ReferenceLoopHandling =
-                    Newtonsoft.Json.ReferenceLoopHandling.Ignore); 
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
+            services.AddScoped(sp =>
+           {
+               var identityOptions = new Options.IdentityOptions();
+               var httpContext = sp.GetService<IHttpContextAccessor>().HttpContext;
+               if (httpContext.User.Identity.IsAuthenticated)
+               {
+                   identityOptions.UserMail = httpContext.User.FindFirst(ClaimTypes.Name).Value;
+
+               }
+               return identityOptions;
+           });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

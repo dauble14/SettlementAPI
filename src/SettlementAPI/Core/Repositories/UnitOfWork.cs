@@ -13,6 +13,7 @@ namespace SettlementAPI.Core.Repositories
         private readonly SettlementDbContext _context;
         private readonly ILogger _logger;
         public IUserRepository Users { get;  set; }
+        public ISettlementRepository Settlements { get; set; }
 
         public UnitOfWork(
             SettlementDbContext context,
@@ -22,6 +23,7 @@ namespace SettlementAPI.Core.Repositories
             _context=context;
             _logger=loggerFactory.CreateLogger<UnitOfWork>();
             Users = new UserRepository(_context, _logger);
+            Settlements = new SettlementRepository(_context, _logger);
         }
 
         public async Task CompleteAsync()

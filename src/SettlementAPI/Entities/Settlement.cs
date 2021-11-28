@@ -9,6 +9,8 @@ namespace SettlementAPI.Entities
         public double Amount { get; set; }
         public string Currency { get; set; }
 
+        [ForeignKey("User")]
+        public string UserId { get; set; }
 
         public virtual User CreatedByUser { get; set; }
         public virtual ICollection<ProductSettlement> ProductSettlementList { get; set; }

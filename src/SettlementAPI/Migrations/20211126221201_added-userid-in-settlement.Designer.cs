@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SettlementAPI.Entities;
 
 namespace SettlementAPI.Migrations
 {
     [DbContext(typeof(SettlementDbContext))]
-    partial class SettlementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211126221201_added-userid-in-settlement")]
+    partial class addeduseridinsettlement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +50,15 @@ namespace SettlementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eeefd931-9e80-491e-aad4-9cae4e04298f",
-                            ConcurrencyStamp = "2cee5083-ed0f-4620-a6e1-18bafb7b351a",
+                            Id = "b2291a8e-4790-47d7-acd6-60d88ad3599f",
+                            ConcurrencyStamp = "061a7ffd-abb9-4b16-a43c-a959404e6565",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "cb1eb20e-ff5c-4252-8a0f-d2c73aeba043",
-                            ConcurrencyStamp = "05c76b18-8370-463b-94b9-154f15a774be",
+                            Id = "eb954ade-0b56-4530-9c79-d5a12cce8d1e",
+                            ConcurrencyStamp = "76664d09-7a8b-43ea-b3e0-3d6c3e42ee95",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
