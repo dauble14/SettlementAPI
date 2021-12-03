@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using SettlementAPI.Core.IConfiguration;
 using SettlementAPI.Entities;
 using SettlementAPI.Models;
@@ -13,25 +14,33 @@ namespace SettlementAPI.Services
     public class SettlementService : ISettlementService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IdentityOptions _identity;
+        private readonly Options.IdentityOptions _identity;
         private readonly IMapper _mapper;
+        private readonly UserManager<User> _userManager;
         public SettlementService(
             IUnitOfWork unitOfWork, 
-            IdentityOptions identity, 
-            IMapper mapper)
+            Options.IdentityOptions identity, 
+            IMapper mapper,
+            UserManager<User> userManager
+            )
         {
             _unitOfWork = unitOfWork;
             _identity = identity;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<CreateSettlementDTO> CreateAsync(CreateSettlementDTO model)
         {
+            var userMail = _identity.UserMail;
+            var user = await _userManager.FindByNameAsync(userMail);
+            
+
             var settlement = new Settlement
             {
                 Currency = model.Currency,
                 Amount = model.Amount,
-                UserId = "5f0269d8-1e86-447f-bab2-8eeb47e01e42"
+                UserId =user.Id
 
             };
 

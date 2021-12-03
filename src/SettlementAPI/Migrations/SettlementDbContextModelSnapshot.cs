@@ -48,15 +48,15 @@ namespace SettlementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "eeefd931-9e80-491e-aad4-9cae4e04298f",
-                            ConcurrencyStamp = "2cee5083-ed0f-4620-a6e1-18bafb7b351a",
+                            Id = "0b33f7c5-e6f7-4ac5-8eef-eb6e334360b1",
+                            ConcurrencyStamp = "012cb616-49a8-4d1c-a14f-0cee463290f2",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "cb1eb20e-ff5c-4252-8a0f-d2c73aeba043",
-                            ConcurrencyStamp = "05c76b18-8370-463b-94b9-154f15a774be",
+                            Id = "6569e4f6-8559-436d-86a3-1c564a823a8f",
+                            ConcurrencyStamp = "162eb090-75ec-4213-9230-3590bd2bb94a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -164,6 +164,34 @@ namespace SettlementAPI.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("SettlementAPI.Entities.Friend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("FriendRequestFlag")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FriendUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("RequestTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FriendUserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Friend");
                 });
 
             modelBuilder.Entity("SettlementAPI.Entities.Product", b =>
@@ -364,6 +392,21 @@ namespace SettlementAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SettlementAPI.Entities.Friend", b =>
+                {
+                    b.HasOne("SettlementAPI.Entities.User", "FriendUser")
+                        .WithMany("Follower")
+                        .HasForeignKey("FriendUserId");
+
+                    b.HasOne("SettlementAPI.Entities.User", "User")
+                        .WithMany("Following")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("FriendUser");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SettlementAPI.Entities.ProductSettlement", b =>
                 {
                     b.HasOne("SettlementAPI.Entities.Product", "Product")
@@ -401,6 +444,13 @@ namespace SettlementAPI.Migrations
             modelBuilder.Entity("SettlementAPI.Entities.Settlement", b =>
                 {
                     b.Navigation("ProductSettlementList");
+                });
+
+            modelBuilder.Entity("SettlementAPI.Entities.User", b =>
+                {
+                    b.Navigation("Follower");
+
+                    b.Navigation("Following");
                 });
 #pragma warning restore 612, 618
         }

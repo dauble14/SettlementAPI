@@ -10,8 +10,8 @@ using SettlementAPI.Entities;
 namespace SettlementAPI.Migrations
 {
     [DbContext(typeof(SettlementDbContext))]
-    [Migration("20211127160927_deleted-usedid-in-productsettlement")]
-    partial class deletedusedidinproductsettlement
+    [Migration("20211129135600_Friend-entity")]
+    partial class Friendentity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,15 +50,15 @@ namespace SettlementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "825a9e9c-9a7f-4a01-911f-f434101d9748",
-                            ConcurrencyStamp = "c18a8357-c053-4968-9b84-634a99436363",
+                            Id = "0b33f7c5-e6f7-4ac5-8eef-eb6e334360b1",
+                            ConcurrencyStamp = "012cb616-49a8-4d1c-a14f-0cee463290f2",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "3e458d57-ebc7-4425-9fbc-a3cb9425cb68",
-                            ConcurrencyStamp = "6be4a81a-0c49-460e-bf5f-8c9d245693aa",
+                            Id = "6569e4f6-8559-436d-86a3-1c564a823a8f",
+                            ConcurrencyStamp = "162eb090-75ec-4213-9230-3590bd2bb94a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -168,6 +168,34 @@ namespace SettlementAPI.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("SettlementAPI.Entities.Friend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("FriendRequestFlag")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FriendUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("RequestTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FriendUserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Friend");
+                });
+
             modelBuilder.Entity("SettlementAPI.Entities.Product", b =>
                 {
                     b.Property<int>("ProductId")
@@ -231,15 +259,15 @@ namespace SettlementAPI.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("float");
 
-                    b.Property<string>("CreatedByUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("SettlementId");
 
-                    b.HasIndex("CreatedByUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Settlements");
                 });
@@ -366,6 +394,21 @@ namespace SettlementAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SettlementAPI.Entities.Friend", b =>
+                {
+                    b.HasOne("SettlementAPI.Entities.User", "FriendUser")
+                        .WithMany("Follower")
+                        .HasForeignKey("FriendUserId");
+
+                    b.HasOne("SettlementAPI.Entities.User", "User")
+                        .WithMany("Following")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("FriendUser");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SettlementAPI.Entities.ProductSettlement", b =>
                 {
                     b.HasOne("SettlementAPI.Entities.Product", "Product")
@@ -395,7 +438,7 @@ namespace SettlementAPI.Migrations
                 {
                     b.HasOne("SettlementAPI.Entities.User", "CreatedByUser")
                         .WithMany()
-                        .HasForeignKey("CreatedByUserId");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("CreatedByUser");
                 });
@@ -403,6 +446,13 @@ namespace SettlementAPI.Migrations
             modelBuilder.Entity("SettlementAPI.Entities.Settlement", b =>
                 {
                     b.Navigation("ProductSettlementList");
+                });
+
+            modelBuilder.Entity("SettlementAPI.Entities.User", b =>
+                {
+                    b.Navigation("Follower");
+
+                    b.Navigation("Following");
                 });
 #pragma warning restore 612, 618
         }

@@ -70,17 +70,17 @@ namespace SettlementAPI.Services
 
         private SigningCredentials GetSigningCredentials()
         {
-            //var key = Environment.GetEnvironmentVariable("KEY");
             var jwtSettings = _configuration.GetSection("Jwt");
             var key = jwtSettings.GetSection("Key").Value;
             var secret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-            //Console.WriteLine(secret);
+            
             return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256Signature);
         }
 
         public async Task<bool> ValidateUser(LoginUserDTO userDTO)
         {
             _user = await _userManager.FindByNameAsync(userDTO.Email);
+            
             var validPassword = await _userManager.CheckPasswordAsync(_user, userDTO.Password);
             return(_user != null && validPassword);
         }

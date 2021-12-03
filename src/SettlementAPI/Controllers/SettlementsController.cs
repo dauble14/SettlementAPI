@@ -12,14 +12,15 @@ namespace SettlementAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SettlementController : ControllerBase
+    [Authorize]
+    public class SettlementsController : ControllerBase
     {
         private readonly ISettlementService _settlements;
-        public SettlementController(ISettlementService settlements)
+        public SettlementsController(ISettlementService settlements)
         {
             _settlements = settlements;
         }
-        [Authorize]
+        
         [HttpPost()]
         public async Task<IActionResult> Post([FromBody] CreateSettlementDTO model)
         {

@@ -55,17 +55,18 @@ namespace SettlementAPI
                 op.SerializerSettings.ReferenceLoopHandling =
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-            services.AddScoped(sp =>
-           {
-               var identityOptions = new Options.IdentityOptions();
-               var httpContext = sp.GetService<IHttpContextAccessor>().HttpContext;
-               if (httpContext.User.Identity.IsAuthenticated)
-               {
-                   identityOptions.UserMail = httpContext.User.FindFirst(ClaimTypes.Name).Value;
 
-               }
-               return identityOptions;
-           });
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped(sp =>
+            {
+                var identityOptions = new Options.IdentityOptions();
+                var httpContext = sp.GetService<IHttpContextAccessor>().HttpContext;
+                if (httpContext.User.Identity.IsAuthenticated)
+                {
+                    identityOptions.UserMail = httpContext.User.FindFirst(ClaimTypes.Name).Value;
+                }
+                return identityOptions;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,7 +90,9 @@ namespace SettlementAPI
             {
                 endpoints.MapControllers();
             });
-           
+
+            
+
         }
     }
 }
