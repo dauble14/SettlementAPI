@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace SettlementAPI.Controllers
 {
-    [Route("api/[controller]")]
+    
+    [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
     public class SettlementsController : ControllerBase
@@ -27,6 +28,13 @@ namespace SettlementAPI.Controllers
             var result = await _settlements.CreateAsync(model);
 
             return Ok(result);
+        }
+
+        [HttpGet()] 
+        public IActionResult Debt()
+        {
+            _settlements.CheckDebt();
+            return Ok();    
         }
     }
 }

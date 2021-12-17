@@ -50,6 +50,7 @@ namespace SettlementAPI
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthManager, AuthManager>();
             services.AddScoped<ISettlementService, SettlementService>();
+            services.AddScoped<IFriendService, FriendService>();
 
             services.AddControllers().AddNewtonsoftJson(op =>
                 op.SerializerSettings.ReferenceLoopHandling =
@@ -89,6 +90,7 @@ namespace SettlementAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+
             });
 
             

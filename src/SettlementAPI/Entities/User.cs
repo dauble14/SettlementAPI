@@ -15,6 +15,8 @@ namespace SettlementAPI.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        public string FriendIdCode { get; set; }
+
         [InverseProperty("FriendUser")]
         public ICollection<Friend> Follower { get; set; }
         [InverseProperty("User")]

@@ -7,6 +7,7 @@ namespace SettlementAPI.Core.IConfiguration
     {
         //IUserRepository Users { get; }
         ISettlementRepository Settlements {get;}
+        IFriendRepository Friends {get;}
         Task CompleteAsync();
     }
 }

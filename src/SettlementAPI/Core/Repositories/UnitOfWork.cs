@@ -14,6 +14,7 @@ namespace SettlementAPI.Core.Repositories
         private readonly ILogger _logger;
         public IUserRepository Users { get;  set; }
         public ISettlementRepository Settlements { get; set; }
+        public IFriendRepository Friends { get; set; }
 
         public UnitOfWork(
             SettlementDbContext context,
@@ -24,6 +25,7 @@ namespace SettlementAPI.Core.Repositories
             _logger=loggerFactory.CreateLogger<UnitOfWork>();
             Users = new UserRepository(_context, _logger);
             Settlements = new SettlementRepository(_context, _logger);
+            Friends =  new FriendRepository(_context, _logger);
         }
 
         public async Task CompleteAsync()

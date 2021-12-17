@@ -13,5 +13,6 @@ namespace SettlementAPI.Models
     
     public class SettlementDTO : CreateSettlementDTO
     {
+        public int SettlementId { get; set; }
     }
 }
