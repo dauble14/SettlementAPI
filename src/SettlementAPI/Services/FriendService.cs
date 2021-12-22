@@ -3,7 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SettlementAPI.Core.IConfiguration;
 using SettlementAPI.Entities;
+using SettlementAPI.Exceptions;
+using SettlementAPI.Models.DTO;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,17 +19,20 @@ namespace SettlementAPI.Services
         private readonly Options.IdentityOptions _identity;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
+        private readonly SettlementDbContext _context;
         public FriendService(
                 IUnitOfWork unitOfWork,
                 Options.IdentityOptions identity,
                 IMapper mapper,
-                UserManager<User> userManager
+                UserManager<User> userManager,
+                SettlementDbContext context
             )
         {
             _identity=identity;
             _unitOfWork=unitOfWork;
             _mapper=mapper;
             _userManager=userManager;
+            _context=context;
         }
 
         public async Task<bool> AddFriendByHisInvitationCode(string invitationCode)
@@ -35,11 +41,12 @@ namespace SettlementAPI.Services
             var loggedUser = await _userManager.FindByNameAsync(loggedUserMail);
             var friendToAdd = _userManager.Users.FirstOrDefault(x=>x.FriendIdCode==invitationCode);
             if (friendToAdd == null)
-                return false; //friend with given invitation code not found
+                throw new NotFoundException($"User with friend code: {invitationCode} not found");
 
-            var relationship= await _unitOfWork.Friends.Get(x => x.UserId == loggedUser.Id && x.FriendUserId == friendToAdd.Id);
+            var relationship= await _unitOfWork.Friends.Get(x => ((x.UserId == loggedUser.Id && x.FriendUserId == friendToAdd.Id) ||
+                (x.UserId == friendToAdd.Id && x.FriendUserId == loggedUser.Id))); //wiem okropnie to wyglada
             if (relationship != null)
-                return false; //they are already friends
+                throw new AlreadyExistsException($"Already friends!");
 
             var friendshipToAdd = new Friend()
             {
@@ -48,7 +55,17 @@ namespace SettlementAPI.Services
                 RequestTime = DateTime.Now,
                 FriendRequestFlag = FriendRequestFlag.Approved
              };
+
+            var friendshipToAdd2 = new Friend()
+            {
+                UserId = friendToAdd.Id,
+                FriendUserId = loggedUser.Id,
+                RequestTime = DateTime.Now,
+                FriendRequestFlag = FriendRequestFlag.Approved
+            };
             await _unitOfWork.Friends.Insert(friendshipToAdd);
+            await _unitOfWork.Friends.Insert(friendshipToAdd2);
+            
             await _unitOfWork.CompleteAsync();
             return true;
         }
@@ -63,7 +80,7 @@ namespace SettlementAPI.Services
             return await GenerateFriendInvitationCode();
         }
 
-        private async Task<string> GenerateFriendInvitationCode()
+        public async Task<string> GenerateFriendInvitationCode()
         {
             var userMail = _identity.UserMail;
             var user = await _userManager.FindByNameAsync(userMail);
@@ -91,6 +108,16 @@ namespace SettlementAPI.Services
             return user.FriendIdCode;
         }
 
+        public async Task<List<UserFriendDTO>> GetUserFriendsAsync()
+        {
+            var loggedUserMail = _identity.UserMail;
+            var loggedUser = await _userManager.FindByNameAsync(loggedUserMail);
+            
+            var userFriends = await _context.Friends.Where(x => x.UserId == loggedUser.Id).Include(x=>x.FriendUser).Select(x=>x.FriendUser).ToListAsync();
 
+            var userFriendsDTO = _mapper.Map<List<User>, List<UserFriendDTO>>(userFriends);
+            
+            return userFriendsDTO;
+        }
     }
 }

@@ -17,7 +17,8 @@ namespace SettlementAPI.Entities
         public DbSet<Settlement> Settlements { get; set; }
         public DbSet<Product> Products { get; set; }
 
-        //public DbSet<FriendsLinking> FriendsLinking { get; set; }
+        public DbSet<Friend> Friends { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

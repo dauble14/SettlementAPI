@@ -24,12 +24,19 @@ namespace SettlementAPI.Controllers
             return Ok(invitationCode);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllFriends()
+        {
+            var friends = await _friends.GetUserFriendsAsync();
+            return Ok(friends);
+        }
+
         [Route("add/{invitationCode}")]
         [HttpPut]
         public async Task<IActionResult> AddFriendByInvitationCode(string invitationCode)
         {
-            var isSucceed = await _friends.AddFriendByHisInvitationCode(invitationCode);
-            return Ok(isSucceed);
+            await _friends.AddFriendByHisInvitationCode(invitationCode);
+            return Ok("Succesfully added user to friends");
         }
 
 

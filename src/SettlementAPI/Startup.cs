@@ -12,6 +12,7 @@ using SettlementAPI.Core;
 using SettlementAPI.Core.IConfiguration;
 using SettlementAPI.Core.Repositories;
 using SettlementAPI.Entities;
+using SettlementAPI.Middlewares;
 using SettlementAPI.Services;
 using System.Security.Claims;
 
@@ -79,7 +80,7 @@ namespace SettlementAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SettlementAPI v1"));
             }
-
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseRouting();
