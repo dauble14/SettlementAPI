@@ -7,8 +7,9 @@ namespace SettlementAPI.Services
     public interface IFriendService
     {
         Task<string> GetUserFriendInvitationCode();
-        Task<bool> AddFriendByHisInvitationCode(string invitationCode);
+        Task<UserFriendDTO> AddFriendByHisInvitationCode(string invitationCode);
         Task<string> GenerateFriendInvitationCode();
         Task<List<UserFriendDTO>> GetUserFriendsAsync();
+        Task DeleteUserFriend(string friendId);
     }
 }

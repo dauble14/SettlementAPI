@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SettlementAPI.Entities;
 
 namespace SettlementAPI.Migrations
 {
     [DbContext(typeof(SettlementDbContext))]
-    partial class SettlementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211222183645_added-time-info-about-settlement")]
+    partial class addedtimeinfoaboutsettlement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

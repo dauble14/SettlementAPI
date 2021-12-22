@@ -35,13 +35,16 @@ namespace SettlementAPI.Services
             _context=context;
         }
 
-        public async Task<bool> AddFriendByHisInvitationCode(string invitationCode)
+        public async Task<UserFriendDTO> AddFriendByHisInvitationCode(string invitationCode)
         {
             var loggedUserMail = _identity.UserMail;
             var loggedUser = await _userManager.FindByNameAsync(loggedUserMail);
             var friendToAdd = _userManager.Users.FirstOrDefault(x=>x.FriendIdCode==invitationCode);
             if (friendToAdd == null)
                 throw new NotFoundException($"User with friend code: {invitationCode} not found");
+
+            if (loggedUser.Id == friendToAdd.Id)
+                throw new AlreadyExistsException("You cannot add yourself!");
 
             var relationship= await _unitOfWork.Friends.Get(x => ((x.UserId == loggedUser.Id && x.FriendUserId == friendToAdd.Id) ||
                 (x.UserId == friendToAdd.Id && x.FriendUserId == loggedUser.Id))); //wiem okropnie to wyglada
@@ -67,7 +70,30 @@ namespace SettlementAPI.Services
             await _unitOfWork.Friends.Insert(friendshipToAdd2);
             
             await _unitOfWork.CompleteAsync();
-            return true;
+
+            var friendToAddDTO = _mapper.Map<User, UserFriendDTO>(friendToAdd);
+            return friendToAddDTO;
+        }
+
+        public async Task DeleteUserFriend(string friendId)
+        {
+            var loggedUserMail = _identity.UserMail;
+            var loggedUser = await _userManager.FindByNameAsync(loggedUserMail);
+            var friendToDelete = await _userManager.Users.FirstOrDefaultAsync(x => x.Id==friendId);
+            if (friendId == loggedUser.Id)
+                throw new NotFoundException("You cannot delete yourself!");
+            
+            if (friendToDelete == null)
+                throw new NotFoundException($"User with given id not found");
+
+            var friendshipToDelete = await _unitOfWork.Friends.Get(x => x.UserId == loggedUser.Id && x.FriendUserId==friendId);
+            var friendshipToDelete2 = await _unitOfWork.Friends.Get(x => x.UserId == friendId && x.FriendUserId==loggedUser.Id);
+            if (friendshipToDelete == null || friendshipToDelete2 == null)
+                throw new NotFoundException("You aren't friends!");
+
+            await _unitOfWork.Friends.Delete(friendshipToDelete.Id);
+            await _unitOfWork.Friends.Delete(friendshipToDelete2.Id);
+            await _unitOfWork.CompleteAsync();
         }
 
         public async Task<string> GetUserFriendInvitationCode()
@@ -119,5 +145,7 @@ namespace SettlementAPI.Services
             
             return userFriendsDTO;
         }
+
+        
     }
 }

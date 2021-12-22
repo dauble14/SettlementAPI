@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SettlementAPI.Entities
@@ -11,6 +12,9 @@ namespace SettlementAPI.Entities
 
         [ForeignKey("User")]
         public string UserId { get; set; }
+
+        public DateTime CreatedAtTime { get; set; }
+        public DateTime ModifiedAtTime { get; set; }
 
         public virtual User CreatedByUser { get; set; }
         public virtual ICollection<ProductSettlement> ProductSettlementList { get; set; }
