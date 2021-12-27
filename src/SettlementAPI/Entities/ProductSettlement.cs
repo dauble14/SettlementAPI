@@ -1,15 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SettlementAPI.Entities
 {
     public class ProductSettlement
     {
+        
         public int ProductSettlementId { get; set; }
         public int ProductId { get; set; }
         public int SettlementId { get; set; }
-        public int Quantity { get; set; }
+        public double Quantity { get; set; }
         public double Amount { get; set; }
         public string Currency { get; set; }
 

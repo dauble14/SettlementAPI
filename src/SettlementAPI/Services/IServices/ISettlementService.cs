@@ -9,6 +9,7 @@ namespace SettlementAPI.Services
     public interface ISettlementService
     {
         public Task<CreateSettlementDTO> CreateAsync(CreateSettlementDTO model);
+        public Task<SettlementDTO> CreateSettlementAsync(List<ProductToAddDTO> productsAndUsers, string currency);
         public void CheckDebt();
     }
 }

@@ -23,11 +23,11 @@ namespace SettlementAPI.Controllers
         }
         
         [HttpPost()]
-        public async Task<IActionResult> Post([FromBody] CreateSettlementDTO model)
+        public async Task<IActionResult> Post([FromBody] List<ProductToAddDTO> model, string currency="PLN")
         {
-            var result = await _settlements.CreateAsync(model);
+            var settlement = await _settlements.CreateSettlementAsync(model, currency);
 
-            return Ok(result);
+            return Ok(settlement);
         }
 
         [HttpGet()] 

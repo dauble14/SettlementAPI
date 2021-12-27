@@ -10,8 +10,8 @@ using SettlementAPI.Entities;
 namespace SettlementAPI.Migrations
 {
     [DbContext(typeof(SettlementDbContext))]
-    [Migration("20211129135600_Friend-entity")]
-    partial class Friendentity
+    [Migration("20211225222601_added-key-to-productset")]
+    partial class addedkeytoproductset
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -50,15 +50,15 @@ namespace SettlementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0b33f7c5-e6f7-4ac5-8eef-eb6e334360b1",
-                            ConcurrencyStamp = "012cb616-49a8-4d1c-a14f-0cee463290f2",
+                            Id = "61ab013b-6eb8-4a00-bf5b-6fed7a7a3168",
+                            ConcurrencyStamp = "3dd7daa2-bf42-4e73-822e-2412738c38ee",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "6569e4f6-8559-436d-86a3-1c564a823a8f",
-                            ConcurrencyStamp = "162eb090-75ec-4213-9230-3590bd2bb94a",
+                            Id = "8ef24db6-36bb-4e51-b180-4ebbda1296d2",
+                            ConcurrencyStamp = "ccfc3388-8dc6-4403-9ca9-85e37ae0e753",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -193,7 +193,7 @@ namespace SettlementAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Friend");
+                    b.ToTable("Friends");
                 });
 
             modelBuilder.Entity("SettlementAPI.Entities.Product", b =>
@@ -219,11 +219,10 @@ namespace SettlementAPI.Migrations
 
             modelBuilder.Entity("SettlementAPI.Entities.ProductSettlement", b =>
                 {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SettlementId")
-                        .HasColumnType("int");
+                    b.Property<int>("ProductSettlementId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<double>("Amount")
                         .HasColumnType("float");
@@ -231,22 +230,27 @@ namespace SettlementAPI.Migrations
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProductSettlementId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<int>("SettlementId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ProductId", "SettlementId");
+                    b.HasKey("ProductSettlementId");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("SettlementId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProductSettlement");
+                    b.ToTable("ProductSettlements");
                 });
 
             modelBuilder.Entity("SettlementAPI.Entities.Settlement", b =>
@@ -259,8 +263,14 @@ namespace SettlementAPI.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("float");
 
+                    b.Property<DateTime>("CreatedAtTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ModifiedAtTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -292,6 +302,9 @@ namespace SettlementAPI.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FriendIdCode")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")

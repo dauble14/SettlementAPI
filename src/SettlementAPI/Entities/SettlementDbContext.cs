@@ -18,21 +18,17 @@ namespace SettlementAPI.Entities
         public DbSet<Product> Products { get; set; }
 
         public DbSet<Friend> Friends { get; set; }
+        public DbSet<ProductSettlement> ProductSettlements { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
 
-            modelBuilder.Entity<ProductSettlement>()
-                .HasKey(x => new { x.ProductId, x.SettlementId });
 
-            //modelBuilder.Entity<Friend>(friendship =>
-            //{
-            //    friendship.HasOne(r=>r.User).WithMany(u=>u.)
-            //});
-                
-
+            //modelBuilder.Entity<ProductSettlement>()
+            //    .HasKey(x => new { x.ProductId, x.SettlementId });
+            modelBuilder.Entity<ProductSettlement>().HasKey(x => x.ProductSettlementId);
 
 
             modelBuilder.ApplyConfiguration(new RoleConfiguation());

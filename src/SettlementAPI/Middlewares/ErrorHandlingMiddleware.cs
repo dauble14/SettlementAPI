@@ -46,7 +46,7 @@ namespace SettlementAPI.Middlewares
                 //TODO: all exceptions caused by the user
                 case NotSupportedException _:
                 case AlreadyExistsException _:
-                //case ValidationException _:
+                case ValidationException _:
                 case NotFoundException _:
                     code = HttpStatusCode.BadRequest;
                     result = new ApiErrorResponse(exception.Message);

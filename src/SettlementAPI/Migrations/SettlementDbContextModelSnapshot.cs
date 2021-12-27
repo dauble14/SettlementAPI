@@ -48,15 +48,15 @@ namespace SettlementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c04b11de-cb1a-4e7f-913e-0cc9d7c38828",
-                            ConcurrencyStamp = "1f22b0a4-26ee-4ea4-a44e-f9fd8f2f2978",
+                            Id = "8633acd5-f53f-4cb1-822b-ef6fa3a9ff16",
+                            ConcurrencyStamp = "4cbce965-25ff-4a4f-8075-e0a05a4e68b9",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "2467d4b7-222f-49a3-af82-22cb38db6cc8",
-                            ConcurrencyStamp = "a9a25ebf-2219-4aec-80f3-c19fbc408389",
+                            Id = "e57fc511-28e6-431c-862e-62b248d75529",
+                            ConcurrencyStamp = "a33fbf3f-151d-4408-87a3-e84608e3488a",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -217,11 +217,10 @@ namespace SettlementAPI.Migrations
 
             modelBuilder.Entity("SettlementAPI.Entities.ProductSettlement", b =>
                 {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SettlementId")
-                        .HasColumnType("int");
+                    b.Property<int>("ProductSettlementId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<double>("Amount")
                         .HasColumnType("float");
@@ -229,22 +228,27 @@ namespace SettlementAPI.Migrations
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProductSettlementId")
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Quantity")
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
+
+                    b.Property<int>("SettlementId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("ProductId", "SettlementId");
+                    b.HasKey("ProductSettlementId");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("SettlementId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProductSettlement");
+                    b.ToTable("ProductSettlements");
                 });
 
             modelBuilder.Entity("SettlementAPI.Entities.Settlement", b =>

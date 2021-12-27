@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SettlementAPI.Migrations
 {
-    public partial class Friendentity : Migration
+    public partial class addedkeytoproductset : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -28,6 +28,7 @@ namespace SettlementAPI.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FriendIdCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -170,7 +171,7 @@ namespace SettlementAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Friend",
+                name: "Friends",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -182,15 +183,15 @@ namespace SettlementAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Friend", x => x.Id);
+                    table.PrimaryKey("PK_Friends", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Friend_AspNetUsers_FriendUserId",
+                        name: "FK_Friends_AspNetUsers_FriendUserId",
                         column: x => x.FriendUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Friend_AspNetUsers_UserId",
+                        name: "FK_Friends_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -205,7 +206,9 @@ namespace SettlementAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Amount = table.Column<double>(type: "float", nullable: false),
                     Currency = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CreatedAtTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedAtTime = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -219,12 +222,13 @@ namespace SettlementAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductSettlement",
+                name: "ProductSettlements",
                 columns: table => new
                 {
+                    ProductSettlementId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     SettlementId = table.Column<int>(type: "int", nullable: false),
-                    ProductSettlementId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<double>(type: "float", nullable: false),
                     Currency = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -232,21 +236,21 @@ namespace SettlementAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductSettlement", x => new { x.ProductId, x.SettlementId });
+                    table.PrimaryKey("PK_ProductSettlements", x => x.ProductSettlementId);
                     table.ForeignKey(
-                        name: "FK_ProductSettlement_AspNetUsers_UserId",
+                        name: "FK_ProductSettlements_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ProductSettlement_Products_ProductId",
+                        name: "FK_ProductSettlements_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProductSettlement_Settlements_SettlementId",
+                        name: "FK_ProductSettlements_Settlements_SettlementId",
                         column: x => x.SettlementId,
                         principalTable: "Settlements",
                         principalColumn: "SettlementId",
@@ -256,12 +260,12 @@ namespace SettlementAPI.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "0b33f7c5-e6f7-4ac5-8eef-eb6e334360b1", "012cb616-49a8-4d1c-a14f-0cee463290f2", "User", "USER" });
+                values: new object[] { "61ab013b-6eb8-4a00-bf5b-6fed7a7a3168", "3dd7daa2-bf42-4e73-822e-2412738c38ee", "User", "USER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "6569e4f6-8559-436d-86a3-1c564a823a8f", "162eb090-75ec-4213-9230-3590bd2bb94a", "Admin", "ADMIN" });
+                values: new object[] { "8ef24db6-36bb-4e51-b180-4ebbda1296d2", "ccfc3388-8dc6-4403-9ca9-85e37ae0e753", "Admin", "ADMIN" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -303,23 +307,28 @@ namespace SettlementAPI.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Friend_FriendUserId",
-                table: "Friend",
+                name: "IX_Friends_FriendUserId",
+                table: "Friends",
                 column: "FriendUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Friend_UserId",
-                table: "Friend",
+                name: "IX_Friends_UserId",
+                table: "Friends",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductSettlement_SettlementId",
-                table: "ProductSettlement",
+                name: "IX_ProductSettlements_ProductId",
+                table: "ProductSettlements",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductSettlements_SettlementId",
+                table: "ProductSettlements",
                 column: "SettlementId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductSettlement_UserId",
-                table: "ProductSettlement",
+                name: "IX_ProductSettlements_UserId",
+                table: "ProductSettlements",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -346,10 +355,10 @@ namespace SettlementAPI.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Friend");
+                name: "Friends");
 
             migrationBuilder.DropTable(
-                name: "ProductSettlement");
+                name: "ProductSettlements");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

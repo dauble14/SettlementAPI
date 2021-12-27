@@ -14,5 +14,7 @@ namespace SettlementAPI.Models
     public class SettlementDTO : CreateSettlementDTO
     {
         public int SettlementId { get; set; }
+        public DateTime CreatedAtTime { get; set; }
+        public DateTime ModifiedAtTime { get; set; }
     }
 }

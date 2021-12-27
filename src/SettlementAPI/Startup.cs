@@ -51,6 +51,7 @@ namespace SettlementAPI
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IAuthManager, AuthManager>();
             services.AddScoped<ISettlementService, SettlementService>();
+            services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IFriendService, FriendService>();
 
             services.AddControllers().AddNewtonsoftJson(op =>
