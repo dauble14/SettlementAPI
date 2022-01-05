@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SettlementAPI.Entities;
 
 namespace SettlementAPI.Migrations
 {
     [DbContext(typeof(SettlementDbContext))]
-    partial class SettlementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220104212809_moneytransfer-dbset-added")]
+    partial class moneytransferdbsetadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +50,15 @@ namespace SettlementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c9c85b64-ee6e-4a11-8dc1-1875c1d23da2",
-                            ConcurrencyStamp = "56e2bab1-6b34-44ff-b110-ba9f36e29641",
+                            Id = "a9a42370-988b-4c92-b303-b0144b36841b",
+                            ConcurrencyStamp = "275aad33-c551-486f-84fa-601f4f561dc4",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "e897fb68-93aa-4ca0-a054-569b4ceeef34",
-                            ConcurrencyStamp = "da2fe09a-6cd0-4892-8cbe-03569ad2ad50",
+                            Id = "0b387f2f-722d-4d1e-88ed-2329bc22e87b",
+                            ConcurrencyStamp = "58ca6380-def5-41ba-9d0f-279ceb8a6d5e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -209,9 +211,6 @@ namespace SettlementAPI.Migrations
 
                     b.Property<string>("ReceiverId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("SendedAtTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("SenderId")
                         .HasColumnType("nvarchar(450)");

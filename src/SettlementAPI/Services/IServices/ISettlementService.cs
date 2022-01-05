@@ -11,5 +11,7 @@ namespace SettlementAPI.Services
         public Task<CreateSettlementDTO> CreateAsync(CreateSettlementDTO model);
         public Task<SettlementDTO> CreateSettlementAsync(List<ProductToAddDTO> productsAndUsers, string currency);
         public void CheckDebt();
+        //Task<SettlementDetailDTO> GetById(int settlementId);
+        Task<List<SettlementOverallDTO>> GetAllSettlements();
     }
 }

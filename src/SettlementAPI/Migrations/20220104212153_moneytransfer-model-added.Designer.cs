@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SettlementAPI.Entities;
 
 namespace SettlementAPI.Migrations
 {
     [DbContext(typeof(SettlementDbContext))]
-    partial class SettlementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220104212153_moneytransfer-model-added")]
+    partial class moneytransfermodeladded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +50,15 @@ namespace SettlementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c9c85b64-ee6e-4a11-8dc1-1875c1d23da2",
-                            ConcurrencyStamp = "56e2bab1-6b34-44ff-b110-ba9f36e29641",
+                            Id = "584e4cfe-2616-4690-863a-da10a5bee536",
+                            ConcurrencyStamp = "962016a5-dec3-49c7-98bb-59fb9943e0fa",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "e897fb68-93aa-4ca0-a054-569b4ceeef34",
-                            ConcurrencyStamp = "da2fe09a-6cd0-4892-8cbe-03569ad2ad50",
+                            Id = "1ca3e8a4-fe97-42fa-a52a-30a60954f627",
+                            ConcurrencyStamp = "4e41d3ac-3752-4a05-8a95-0761fe6f1877",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -192,37 +194,6 @@ namespace SettlementAPI.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Friends");
-                });
-
-            modelBuilder.Entity("SettlementAPI.Entities.MoneyTransfer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Currency")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ReceiverId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("SendedAtTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("SenderId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReceiverId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("MoneyTransfers");
                 });
 
             modelBuilder.Entity("SettlementAPI.Entities.Product", b =>
@@ -449,21 +420,6 @@ namespace SettlementAPI.Migrations
                     b.Navigation("FriendUser");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SettlementAPI.Entities.MoneyTransfer", b =>
-                {
-                    b.HasOne("SettlementAPI.Entities.User", "Receiver")
-                        .WithMany()
-                        .HasForeignKey("ReceiverId");
-
-                    b.HasOne("SettlementAPI.Entities.User", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId");
-
-                    b.Navigation("Receiver");
-
-                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("SettlementAPI.Entities.ProductSettlement", b =>

@@ -128,5 +128,27 @@ namespace SettlementAPI.Services
             }
             return true;
         }
+
+        public async Task<List<SettlementOverallDTO>> GetAllSettlements()
+        {
+            var userMail = _identity.UserMail;
+            var loggedUser = await _userManager.FindByNameAsync(userMail);
+            var userSettlementsList =await _context.Settlements.Include(x => x.ProductSettlementList
+                                        .Where(x=>x.UserId==loggedUser.Id))
+                                        .Include(x=>x.CreatedByUser).ToListAsync();
+            
+            var userSettlementsListDTO = new List<SettlementOverallDTO>();
+            foreach (var userSettlement in userSettlementsList)
+            {
+                userSettlementsListDTO.Add(new SettlementOverallDTO()
+                {
+                    SettlementId=userSettlement.SettlementId,
+                    IsCreator= (userSettlement.CreatedByUser.Id==loggedUser.Id),
+                    CreatedAtTime= userSettlement.CreatedAtTime,
+                    ModifiedAtTime= userSettlement.ModifiedAtTime
+                });
+            }
+            return userSettlementsListDTO;
+        }
     }
 }

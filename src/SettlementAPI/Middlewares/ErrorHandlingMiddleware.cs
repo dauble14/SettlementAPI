@@ -45,6 +45,10 @@ namespace SettlementAPI.Middlewares
             {
                 //TODO: all exceptions caused by the user
                 case NotSupportedException _:
+                case ForbidException _:
+                    code = HttpStatusCode.Forbidden;
+                    result = new ApiErrorResponse(exception.Message);
+                    break;
                 case AlreadyExistsException _:
                 case ValidationException _:
                 case NotFoundException _:

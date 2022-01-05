@@ -11,7 +11,8 @@ using System.Threading.Tasks;
 namespace SettlementAPI.Controllers
 {
     
-    [Route("api/[controller]/[action]")]
+    //[Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     [Authorize]
     public class SettlementsController : ControllerBase
@@ -22,8 +23,8 @@ namespace SettlementAPI.Controllers
             _settlements = settlements;
         }
         
-        [HttpPost()]
-        public async Task<IActionResult> Post([FromBody] List<ProductToAddDTO> model, string currency="PLN")
+        [HttpPost]
+        public async Task<IActionResult> CreateSettlement([FromBody] List<ProductToAddDTO> model, string currency="PLN")
         {
             var settlement = await _settlements.CreateSettlementAsync(model, currency);
 
@@ -31,10 +32,10 @@ namespace SettlementAPI.Controllers
         }
 
         [HttpGet()] 
-        public IActionResult Debt()
+        public async Task<IActionResult> GetAllSettlements()
         {
-            _settlements.CheckDebt();
-            return Ok();    
+            var settlements = await _settlements.GetAllSettlements();
+            return Ok(settlements);    
         }
     }
 }

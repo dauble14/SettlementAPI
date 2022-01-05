@@ -17,4 +17,19 @@ namespace SettlementAPI.Models
         public DateTime CreatedAtTime { get; set; }
         public DateTime ModifiedAtTime { get; set; }
     }
+
+    public class SettlementOverallDTO
+    {
+        public int SettlementId { get; set; }
+        public bool IsCreator { get; set; }
+        //public string CreatedByUserId { get; set; }
+        public DateTime CreatedAtTime { get; set; }
+        public DateTime ModifiedAtTime { get; set; }
+    }
+
+    public class SettlementDetailDTO : SettlementDTO 
+    {
+
+    }
+
 }

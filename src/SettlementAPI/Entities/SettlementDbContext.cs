@@ -20,6 +20,7 @@ namespace SettlementAPI.Entities
         public DbSet<Friend> Friends { get; set; }
         public DbSet<ProductSettlement> ProductSettlements { get; set; }
 
+        public DbSet<MoneyTransfer> MoneyTransfers { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
