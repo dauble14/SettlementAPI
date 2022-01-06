@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SettlementAPI.Models;
+using SettlementAPI.Models.Responses;
 using SettlementAPI.Services;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,9 @@ namespace SettlementAPI.Controllers
         {
             _settlements = settlements;
         }
-        
+
+        [ProducesResponseType(200, Type = typeof(ApiResponse<SettlementDTO>))]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
         [HttpPost]
         public async Task<IActionResult> CreateSettlement([FromBody] List<ProductToAddDTO> model, string currency="PLN")
         {
@@ -31,11 +34,13 @@ namespace SettlementAPI.Controllers
             return Ok(settlement);
         }
 
-        [HttpGet()] 
-        public async Task<IActionResult> GetAllSettlements()
+        [ProducesResponseType(200, Type = typeof(ApiResponse<List<SettlementOverallDTO>>))]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
+        [HttpGet] 
+        public async Task<IActionResult> GetAllSettlements(string filter, string sortBy, string currency="PLN")
         {
-            var settlements = await _settlements.GetAllSettlements();
-            return Ok(settlements);    
+            var settlements = await _settlements.GetAllSettlementsAsync(currency, filter, sortBy);
+            return Ok(new ApiResponse<List<SettlementOverallDTO>>(settlements, "Successfully retrieved user settlements"));    
         }
     }
 }

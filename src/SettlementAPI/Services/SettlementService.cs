@@ -129,14 +129,68 @@ namespace SettlementAPI.Services
             return true;
         }
 
-        public async Task<List<SettlementOverallDTO>> GetAllSettlements()
+        public async Task<List<SettlementOverallDTO>> GetAllSettlementsAsync(string currency, string filter, string sortBy="-created")
         {
             var userMail = _identity.UserMail;
             var loggedUser = await _userManager.FindByNameAsync(userMail);
-            var userSettlementsList =await _context.Settlements.Include(x => x.ProductSettlementList
-                                        .Where(x=>x.UserId==loggedUser.Id))
-                                        .Include(x=>x.CreatedByUser).ToListAsync();
+
+            if (string.IsNullOrEmpty(filter))
+                filter = "week";
+            var upToDay = new DateTime();
             
+            switch (filter)
+            {
+                case "hour":
+                    upToDay = DateTime.Now.AddHours(-1);
+                    break;
+                case "month":
+                    upToDay= DateTime.Now.AddDays(-30);
+                    break;
+                case "day":
+                    upToDay = DateTime.Now.AddDays(-1);
+                    break;
+                case "year":
+                    upToDay = DateTime.Now.AddDays(-365);
+                    break;
+                default:
+                    upToDay = DateTime.Now.AddDays(-7);
+                    break;
+            }
+
+            var userSettlementsList = new List<Settlement>();
+            switch (sortBy)
+            {
+                case "created":
+                    userSettlementsList = await _context.Settlements
+                                            .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
+                                            .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
+                                            .Include(s => s.CreatedByUser).OrderBy(x => x.CreatedAtTime).ToListAsync();
+                    break;
+                case "-modified":
+                    userSettlementsList = await _context.Settlements
+                                            .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
+                                            .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
+                                            .Include(s => s.CreatedByUser).OrderByDescending(x => x.ModifiedAtTime).ToListAsync();
+                    break;
+                case "modified":
+                    userSettlementsList = await _context.Settlements
+                                            .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
+                                            .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
+                                            .Include(s => s.CreatedByUser).OrderBy(x => x.ModifiedAtTime).ToListAsync();
+                    break;
+
+                default:
+                    userSettlementsList = await _context.Settlements
+                                            .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
+                                            .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
+                                            .Include(s => s.CreatedByUser).OrderByDescending(x => x.CreatedAtTime).ToListAsync();
+                    break;
+            }
+            //var userSettlementsList = await _context.Settlements
+            //                                .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
+            //                                .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
+            //                                .Include(s => s.CreatedByUser).OrderByDescending(x => x.CreatedAtTime).ToListAsync();
+
             var userSettlementsListDTO = new List<SettlementOverallDTO>();
             foreach (var userSettlement in userSettlementsList)
             {
