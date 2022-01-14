@@ -36,11 +36,11 @@ namespace SettlementAPI.Controllers
 
         [ProducesResponseType(200, Type = typeof(ApiResponse<List<SettlementOverallDTO>>))]
         [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
-        [HttpGet] 
+        [HttpGet]
         public async Task<IActionResult> GetAllSettlements(string filter, string sortBy, string currency="PLN")
         {
             var settlements = await _settlements.GetAllSettlementsAsync(currency, filter, sortBy);
-            return Ok(new ApiResponse<List<SettlementOverallDTO>>(settlements, "Successfully retrieved user settlements"));    
+            return Ok(new ApiResponse<List<SettlementOverallDTO>>(settlements, "Successfully retrieved user's settlements"));    
         }
     }
 }
