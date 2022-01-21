@@ -13,6 +13,6 @@ namespace SettlementAPI.Services
         public void CheckDebt();
         //Task<SettlementDetailDTO> GetById(int settlementId);
         Task<List<SettlementOverallDTO>> GetAllSettlementsAsync(string currency, string filter, string sortBy);
-        Task<> GetSettlementAsync(int id);
+        //Task<> GetSettlementAsync(int id);
     }
 }

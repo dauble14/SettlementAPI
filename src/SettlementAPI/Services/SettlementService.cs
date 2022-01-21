@@ -158,39 +158,57 @@ namespace SettlementAPI.Services
             }
 
             var userSettlementsList = new List<Settlement>();
-            switch (sortBy)
-            {
-                case "created":
-                    userSettlementsList = await _context.Settlements
-                                            .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
-                                            .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
-                                            .Include(s => s.CreatedByUser).OrderBy(x => x.CreatedAtTime).ToListAsync();
-                    break;
-                case "-modified":
-                    userSettlementsList = await _context.Settlements
-                                            .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
-                                            .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
-                                            .Include(s => s.CreatedByUser).OrderByDescending(x => x.ModifiedAtTime).ToListAsync();
-                    break;
-                case "modified":
-                    userSettlementsList = await _context.Settlements
-                                            .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
-                                            .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
-                                            .Include(s => s.CreatedByUser).OrderBy(x => x.ModifiedAtTime).ToListAsync();
-                    break;
+            //switch (sortBy)
+            //{
+            //    case "created":
+            //        userSettlementsList = await _context.Settlements
+            //                                .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
+            //                                .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
+            //                                .Include(s => s.CreatedByUser).OrderBy(x => x.CreatedAtTime).ToListAsync();
+            //        break;
+            //    case "-modified":
+            //        userSettlementsList = await _context.Settlements
+            //                                .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
+            //                                .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
+            //                                .Include(s => s.CreatedByUser).OrderByDescending(x => x.ModifiedAtTime).ToListAsync();
+            //        break;
+            //    case "modified":
+            //        userSettlementsList = await _context.Settlements
+            //                                .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
+            //                                .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
+            //                                .Include(s => s.CreatedByUser).OrderBy(x => x.ModifiedAtTime).ToListAsync();
+            //        break;
 
-                default:
-                    userSettlementsList = await _context.Settlements
-                                            .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
-                                            .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
-                                            .Include(s => s.CreatedByUser).OrderByDescending(x => x.CreatedAtTime).ToListAsync();
-                    break;
-            }
-            //var userSettlementsList = await _context.Settlements
+            //    default:
+            //        userSettlementsList = await _context.Settlements
             //                                .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
             //                                .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
             //                                .Include(s => s.CreatedByUser).OrderByDescending(x => x.CreatedAtTime).ToListAsync();
+            //        break;
+            //}
 
+            var querable = _context.Settlements.Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
+                        .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id)).Include(s => s.CreatedByUser);
+
+            switch (sortBy)
+            {
+                case "created":
+                    userSettlementsList =await querable.OrderBy(x => x.CreatedAtTime).ToListAsync();
+                    break;
+                case "-modified":
+                    userSettlementsList = await querable.OrderByDescending(x => x.ModifiedAtTime).ToListAsync();
+                    break;
+                case "modified":
+                    userSettlementsList = await querable.OrderBy(x => x.ModifiedAtTime).ToListAsync();
+                    break;
+
+                default:
+                    userSettlementsList = await querable.OrderByDescending(x => x.CreatedAtTime).ToListAsync();
+
+                    break;
+            }
+
+            
             var userSettlementsListDTO = new List<SettlementOverallDTO>();
             foreach (var userSettlement in userSettlementsList)
             {
