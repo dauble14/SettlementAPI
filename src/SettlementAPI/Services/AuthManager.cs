@@ -60,11 +60,13 @@ namespace SettlementAPI.Services
 
             var roles = await _userManager.GetRolesAsync(_user);
 
+            var userId = await _userManager.GetUserIdAsync(_user);
+
             foreach (var role in roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, userId));
             return claims;
         }
 
