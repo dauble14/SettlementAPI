@@ -6,6 +6,6 @@ namespace SettlementAPI.Options
     {
         
         public string UserMail { get; set; }
-        
+        public string UserId { get; set; }
     }
 }

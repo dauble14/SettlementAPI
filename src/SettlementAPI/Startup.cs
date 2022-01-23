@@ -67,6 +67,7 @@ namespace SettlementAPI
                 if (httpContext.User.Identity.IsAuthenticated)
                 {
                     identityOptions.UserMail = httpContext.User.FindFirst(ClaimTypes.Name).Value;
+                    identityOptions.UserId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 }
                 return identityOptions;
             });
