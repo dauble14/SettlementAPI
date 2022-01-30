@@ -29,4 +29,13 @@ namespace SettlementAPI.Models
         public string[] UsersWhoTakeProduct { get; set; }
         
     }
+
+    public class ProductDetailForCreatorDTO
+    {
+        public int ProductId { get; set; }
+        public string Name { get; set; }
+        public double Quantity { get; set; }
+        public double FullPrice { get; set; }
+        public Dictionary<string, string> Users { get; set; }
+    }
 }

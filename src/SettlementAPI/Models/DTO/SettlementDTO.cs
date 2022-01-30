@@ -27,9 +27,20 @@ namespace SettlementAPI.Models
         public DateTime ModifiedAtTime { get; set; }
     }
 
-    public class SettlementDetailDTO : SettlementDTO 
+    public class SettlementDetailDTO 
     {
+        public int SettlementId { get; set; }
+        public string Currency { get; set; }
+        public double Amount { get; set; }
+        public List<ProductDTO> Products { get; set; }
+    }
 
+    public class SettlementDetailForCreatorDTO
+    {
+        public int SettlementId { get; set; }
+        public string Currency { get; set; }
+        public double Amount { get; set; }
+        public List<ProductDetailForCreatorDTO> Products { get; set; }
     }
 
 }

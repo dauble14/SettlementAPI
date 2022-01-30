@@ -39,25 +39,6 @@ namespace SettlementAPI.Services
             _products = products;
         }
 
-        public async Task<CreateSettlementDTO> CreateAsync(CreateSettlementDTO model)
-        {
-            var userMail = _identity.UserMail;
-            var user = await _userManager.FindByNameAsync(userMail);
-            
-
-            var settlement = new Settlement
-            {
-                Currency = model.Currency,
-                Amount = model.Amount,
-                UserId =user.Id
-
-            };
-
-            await _unitOfWork.Settlements.Insert(settlement);
-            await _unitOfWork.CompleteAsync();
-            return model;
-        }
-
         public void CheckDebt() //User owner, User debpter
         {
             try
@@ -158,37 +139,13 @@ namespace SettlementAPI.Services
             }
 
             var userSettlementsList = new List<Settlement>();
-            //switch (sortBy)
-            //{
-            //    case "created":
-            //        userSettlementsList = await _context.Settlements
-            //                                .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
-            //                                .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
-            //                                .Include(s => s.CreatedByUser).OrderBy(x => x.CreatedAtTime).ToListAsync();
-            //        break;
-            //    case "-modified":
-            //        userSettlementsList = await _context.Settlements
-            //                                .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
-            //                                .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
-            //                                .Include(s => s.CreatedByUser).OrderByDescending(x => x.ModifiedAtTime).ToListAsync();
-            //        break;
-            //    case "modified":
-            //        userSettlementsList = await _context.Settlements
-            //                                .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
-            //                                .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
-            //                                .Include(s => s.CreatedByUser).OrderBy(x => x.ModifiedAtTime).ToListAsync();
-            //        break;
 
-            //    default:
-            //        userSettlementsList = await _context.Settlements
-            //                                .Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
-            //                                .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id))
-            //                                .Include(s => s.CreatedByUser).OrderByDescending(x => x.CreatedAtTime).ToListAsync();
-            //        break;
-            //}
-
-            var querable = _context.Settlements.Where(s => s.Currency == currency && s.CreatedAtTime >= upToDay)
-                        .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == loggedUser.Id)).Include(s => s.CreatedByUser);
+            var querable = _context.ProductSettlements
+                .Where(ps => ps.UserId == loggedUser.Id || ps.Settlement.UserId==loggedUser.Id)
+                .Include(ps => ps.Settlement).ThenInclude(s => s.CreatedByUser)
+                .Where(ps=>ps.Settlement.Currency==currency && ps.Settlement.CreatedAtTime >= upToDay)
+                .Select(ps => ps.Settlement)
+                .Distinct();
 
             switch (sortBy)
             {
@@ -220,7 +177,50 @@ namespace SettlementAPI.Services
                     ModifiedAtTime= userSettlement.ModifiedAtTime
                 });
             }
+            
             return userSettlementsListDTO;
+        }
+
+        public async Task<SettlementDetailDTO> GetSettlementDetail(int settlementId)
+        {
+            var settlement =await _context.Settlements.FirstOrDefaultAsync(s => s.SettlementId == settlementId);
+            if(settlement==null) 
+                throw new NotFoundException("Settlement with given id not found");
+            
+            var userId = _identity.UserId;
+            var products = await _context.ProductSettlements
+                    .Where(ps => ps.SettlementId == settlementId && ps.UserId == userId)
+                    .Include(ps => ps.Product)
+                    .Select(p => p.Product).ToListAsync();
+            if (products.Count==0 && settlement.UserId!=userId)
+                throw new ForbidException("You aren't included in this settlement");
+            double settlementAmount = Math.Round(products.Sum(p => p.FullPrice), 2);
+            var resultSettlementDTO = new SettlementDetailDTO
+            {
+                SettlementId = settlement.SettlementId,
+                Currency = settlement.Currency,
+                Products = _mapper.Map<List<Product>, List<ProductDTO>>(products),
+                Amount = settlementAmount
+            };
+                       
+            return resultSettlementDTO;
+        }
+
+        public async Task<SettlementDetailForCreatorDTO> GetSettlementDetailForCreatorAsync(int settlementId)
+        {
+            var userId = _identity.UserId;
+            var settlement =await _context.Settlements.FirstOrDefaultAsync(s => s.SettlementId == settlementId);
+            if (settlement == null)
+                throw new NotFoundException("Settlement with given id not found");
+            if (settlement.UserId != userId)
+                throw new ForbidException("You aren't creator of this settlement");
+
+            return new SettlementDetailForCreatorDTO
+            {
+                SettlementId= settlement.SettlementId,
+                Currency="dupskoPLN",
+                Amount=2137.45
+            };
         }
     }
 }

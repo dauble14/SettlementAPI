@@ -40,7 +40,16 @@ namespace SettlementAPI.Controllers
         public async Task<IActionResult> GetAllSettlements(string filter, string sortBy, string currency="PLN")
         {
             var settlements = await _settlements.GetAllSettlementsAsync(currency, filter, sortBy);
-            return Ok(new ApiResponse<List<SettlementOverallDTO>>(settlements, "Successfully retrieved user's settlements"));    
+            return Ok(new ApiResponse<List<SettlementOverallDTO>>(settlements, "Retrieved user's settlements"));    
+        }
+
+        [ProducesResponseType(200, Type = typeof(ApiResponse<SettlementDetailDTO>))]
+        [ProducesResponseType(400, Type = typeof(ApiErrorResponse))]
+        [HttpGet("{settlementId}")]
+        public async Task<IActionResult> GetSettlementMemberDetail(int settlementId)
+        {
+            var settlement = await _settlements.GetSettlementDetail(settlementId);
+            return Ok(new ApiResponse<SettlementDetailDTO>(settlement, "Retrieved user's settlement"));
         }
     }
 }
