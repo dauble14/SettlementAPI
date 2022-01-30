@@ -10,5 +10,6 @@ namespace SettlementAPI.Services
     public interface IProductService
     {
         public Task AddProductToSettlementAsync(ProductToAddDTO product, int settlementId);
+        Task<List<ProductDetailForCreatorDTO>> GetAllProductsFromSettlementAsync(int settlementId);
     }
 }

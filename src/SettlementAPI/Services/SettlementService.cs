@@ -213,12 +213,12 @@ namespace SettlementAPI.Services
             if (settlement == null)
                 throw new NotFoundException("Settlement with given id not found");
             if (settlement.UserId != userId)
-                throw new ForbidException("You aren't creator of this settlement");
+                throw new ForbidException("You aren't a creator of this settlement");
 
             return new SettlementDetailForCreatorDTO
             {
                 SettlementId= settlement.SettlementId,
-                Currency="dupskoPLN",
+                Currency=settlement.Currency,
                 Amount=2137.45
             };
         }

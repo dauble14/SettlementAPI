@@ -80,7 +80,18 @@ namespace SettlementAPI.Services
                     //settlement.ProductSettlementList.Add(productSettlementListing);      
             }
             await _context.SaveChangesAsync();
+        }
 
+        public async Task<List<ProductDetailForCreatorDTO>> GetAllProductsFromSettlementAsync(int settlementId)
+        {
+            var productsIds =await _context.ProductSettlements
+                .Where(ps => ps.SettlementId == settlementId)
+                .Select(ps => ps.ProductId).Distinct().ToListAsync();
+            var productsList = new List<ProductDetailForCreatorDTO>();
+            foreach (var productId in productsIds)
+            {
+
+            }
         }
     }
 }

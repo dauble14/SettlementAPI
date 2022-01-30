@@ -51,5 +51,12 @@ namespace SettlementAPI.Controllers
             var settlement = await _settlements.GetSettlementDetail(settlementId);
             return Ok(new ApiResponse<SettlementDetailDTO>(settlement, "Retrieved user's settlement"));
         }
+
+        [HttpGet("{settlementId}/creatorview")]
+        public async Task<IActionResult> GetSettlementCreatorDetail(int settlementId)
+        {
+            var settlement = await _settlements.GetSettlementDetailForCreatorAsync(settlementId);
+            return Ok(new ApiResponse<SettlementDetailForCreatorDTO>(settlement, "Retrieved user's settlement detail for creator"));
+        }
     }
 }
