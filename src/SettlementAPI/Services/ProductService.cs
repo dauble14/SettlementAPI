@@ -5,6 +5,7 @@ using SettlementAPI.Core.IConfiguration;
 using SettlementAPI.Entities;
 using SettlementAPI.Exceptions;
 using SettlementAPI.Models;
+using SettlementAPI.Models.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace SettlementAPI.Services
             _userManager=userManager;
         }
 
+        
         public async Task AddProductToSettlementAsync(ProductToAddDTO product, int settlementId)
         {
             if (product.Quantity < 0)
@@ -84,14 +86,62 @@ namespace SettlementAPI.Services
 
         public async Task<List<ProductDetailForCreatorDTO>> GetAllProductsFromSettlementAsync(int settlementId)
         {
-            var productsIds =await _context.ProductSettlements
+            var productsIds = await _context.ProductSettlements
                 .Where(ps => ps.SettlementId == settlementId)
                 .Select(ps => ps.ProductId).Distinct().ToListAsync();
             var productsList = new List<ProductDetailForCreatorDTO>();
-            foreach (var productId in productsIds)
+            
+            foreach (var id in productsIds)
             {
-
+                productsList.Add(new ProductDetailForCreatorDTO
+                {
+                    ProductId = id,
+                    FullPrice = 0,
+                    Quantity = 0,
+                    Users = new List<ProductUsersDTO>(),
+                    Name = _context.Products.FirstOrDefault(p=>p.ProductId == id).Name
+                    
+                });
             }
+            
+            foreach (var product in productsList)
+            {
+                var productSettlements = await _context.ProductSettlements.Where(ps=>ps.ProductId==product.ProductId).ToListAsync();
+                foreach (var ps in productSettlements)
+                {
+                    var user = product.Users.FirstOrDefault(u=>u.UserId==ps.UserId);
+                    if (user != null)
+                    {
+                        user.Quantity += ps.Quantity;
+                        product.Quantity+= ps.Quantity;
+                        product.FullPrice += ps.Amount;
+                    }
+                    else
+                    {
+                        product.Users.Add(new ProductUsersDTO 
+                        { 
+                            UserId = ps.UserId,
+                            Quantity = ps.Quantity
+                        });
+                        product.Quantity += ps.Quantity;
+                        product.FullPrice += ps.Amount;
+
+                    }                    
+                }
+            }
+
+            foreach (var product in productsList)
+            {
+                foreach (var user in product.Users)
+                {
+                    var temp = await _userManager.FindByIdAsync(user.UserId);
+                    user.FirstName = temp.FirstName;
+                    user.LastName = temp.LastName;                   
+                }
+            }
+
+            return productsList;
         }
+
     }
 }

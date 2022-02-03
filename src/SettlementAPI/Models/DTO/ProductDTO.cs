@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SettlementAPI.Models.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,6 +37,6 @@ namespace SettlementAPI.Models
         public string Name { get; set; }
         public double Quantity { get; set; }
         public double FullPrice { get; set; }
-        public Dictionary<string, string> Users { get; set; }
+        public List<ProductUsersDTO> Users { get; set; }
     }
 }

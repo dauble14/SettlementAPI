@@ -215,11 +215,14 @@ namespace SettlementAPI.Services
             if (settlement.UserId != userId)
                 throw new ForbidException("You aren't a creator of this settlement");
 
+            var products = await _products.GetAllProductsFromSettlementAsync(settlementId);
+
             return new SettlementDetailForCreatorDTO
             {
-                SettlementId= settlement.SettlementId,
+                Products = products,
+                SettlementId = settlement.SettlementId,
                 Currency=settlement.Currency,
-                Amount=2137.45
+                Amount= products.Sum(p => p.FullPrice)               
             };
         }
     }
