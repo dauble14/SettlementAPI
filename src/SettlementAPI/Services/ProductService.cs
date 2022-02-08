@@ -99,8 +99,7 @@ namespace SettlementAPI.Services
                     FullPrice = 0,
                     Quantity = 0,
                     Users = new List<ProductUsersDTO>(),
-                    Name = _context.Products.FirstOrDefault(p=>p.ProductId == id).Name
-                    
+                    Name = _context.Products.FirstOrDefault(p=>p.ProductId == id).Name                    
                 });
             }
             

@@ -14,6 +14,7 @@ namespace SettlementAPI.Entities
 
         public double Amount { get; set; }
         public string Currency { get; set; }
+        public TransferRequestFlag TransferRequestFlag { get; set; }
 
         public DateTime SendedAtTime { get; set; }
 
@@ -23,5 +24,12 @@ namespace SettlementAPI.Entities
         [ForeignKey("ReceiverId")]
         public User Receiver { get; set; }
 
+    }
+
+    public enum TransferRequestFlag
+    {
+        None =0,
+        Accepted,
+        Rejected
     }
 }

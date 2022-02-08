@@ -14,6 +14,7 @@ using SettlementAPI.Core.Repositories;
 using SettlementAPI.Entities;
 using SettlementAPI.Middlewares;
 using SettlementAPI.Services;
+using SettlementAPI.Services.IServices;
 using System.Security.Claims;
 
 namespace SettlementAPI
@@ -53,6 +54,7 @@ namespace SettlementAPI
             services.AddScoped<ISettlementService, SettlementService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IFriendService, FriendService>();
+            services.AddScoped<IMoneyTransferService, MoneyTransferService>();
 
             services.AddControllers().AddNewtonsoftJson(op =>
                 op.SerializerSettings.ReferenceLoopHandling =

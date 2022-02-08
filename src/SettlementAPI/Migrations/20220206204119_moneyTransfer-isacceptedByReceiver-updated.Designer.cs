@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SettlementAPI.Entities;
 
 namespace SettlementAPI.Migrations
 {
     [DbContext(typeof(SettlementDbContext))]
-    partial class SettlementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220206204119_moneyTransfer-isacceptedByReceiver-updated")]
+    partial class moneyTransferisacceptedByReceiverupdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +50,15 @@ namespace SettlementAPI.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fb690633-7ec9-427b-8eeb-0f0a1a4679ac",
-                            ConcurrencyStamp = "c680ad90-08fb-4fe8-bb06-8a2fbfc01906",
+                            Id = "3e5e74b8-5297-4c1f-a524-5bf8ce676e21",
+                            ConcurrencyStamp = "d734b036-58a5-4880-a54b-f416494e13f5",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
-                            Id = "fcace621-a993-4201-b77f-499794cc2f31",
-                            ConcurrencyStamp = "68343d37-160e-499d-aea2-bfb86caad356",
+                            Id = "94e5196c-bbeb-4eb6-a155-5fbb5a19c3b4",
+                            ConcurrencyStamp = "e649eefe-a95f-41b4-850e-2de71c2888f9",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -207,6 +209,9 @@ namespace SettlementAPI.Migrations
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsAcceptedByReceiver")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ReceiverId")
                         .HasColumnType("nvarchar(450)");
 
@@ -215,9 +220,6 @@ namespace SettlementAPI.Migrations
 
                     b.Property<string>("SenderId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("TransferRequestFlag")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

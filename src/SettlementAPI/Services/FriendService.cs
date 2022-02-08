@@ -146,6 +146,10 @@ namespace SettlementAPI.Services
             return userFriendsDTO;
         }
 
-        
+        public async Task<bool> IsUserFriend(string friendId)
+        {
+            var loggedUserId = _identity.UserId;
+            return await _context.Friends.AnyAsync(f => (f.UserId == loggedUserId && f.FriendUserId == friendId) || (f.UserId == friendId && f.FriendUserId == loggedUserId));
+        }
     }
 }

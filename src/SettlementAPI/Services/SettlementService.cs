@@ -209,7 +209,7 @@ namespace SettlementAPI.Services
         public async Task<SettlementDetailForCreatorDTO> GetSettlementDetailForCreatorAsync(int settlementId)
         {
             var userId = _identity.UserId;
-            var settlement =await _context.Settlements.FirstOrDefaultAsync(s => s.SettlementId == settlementId);
+            var settlement = await _context.Settlements.FirstOrDefaultAsync(s => s.SettlementId == settlementId);
             if (settlement == null)
                 throw new NotFoundException("Settlement with given id not found");
             if (settlement.UserId != userId)

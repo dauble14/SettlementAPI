@@ -11,5 +11,6 @@ namespace SettlementAPI.Services
         Task<string> GenerateFriendInvitationCode();
         Task<List<UserFriendDTO>> GetUserFriendsAsync();
         Task DeleteUserFriend(string friendId);
+        Task<bool> IsUserFriend(string friendId);
     }
 }
