@@ -32,4 +32,6 @@ namespace SettlementAPI.Models.DTO
         Reject=0,
         Accept
     }
+
+
 }

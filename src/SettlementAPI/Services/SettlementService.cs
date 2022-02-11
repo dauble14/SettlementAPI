@@ -140,12 +140,14 @@ namespace SettlementAPI.Services
 
             var userSettlementsList = new List<Settlement>();
 
-            var querable = _context.ProductSettlements
+            var querable =_context.ProductSettlements
                 .Where(ps => ps.UserId == loggedUser.Id || ps.Settlement.UserId==loggedUser.Id)
                 .Include(ps => ps.Settlement).ThenInclude(s => s.CreatedByUser)
                 .Where(ps=>ps.Settlement.Currency==currency && ps.Settlement.CreatedAtTime >= upToDay)
                 .Select(ps => ps.Settlement)
                 .Distinct();
+
+
 
             switch (sortBy)
             {

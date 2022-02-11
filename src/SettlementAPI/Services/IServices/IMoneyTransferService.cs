@@ -12,5 +12,10 @@ namespace SettlementAPI.Services.IServices
         Task SendMoneyTransferAsync(string receiverId, string currency, double amount);
         Task<List<MoneyTransferDTO>> GetMoneyTransfersAsync(string filter);
         Task SetTransferStatus(int statusId, TransferResponseAction action);
+        Task<List<CashBalanceDTO>> GetAllCashBalancesWithUsersAsync(string currency);
+
+        Task<CashBalanceDTO> GetMoneyTransferBalanceBetweenUsersAsync(string userId);
+
+        Task<List<string>> GetAllUsersRelatedToTheMoneyExchangeWithTheUserAsync(string userId);
     }
 }

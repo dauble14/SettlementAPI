@@ -132,5 +132,114 @@ namespace SettlementAPI.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<CashBalanceDTO>> GetAllCashBalancesWithUsersAsync(string currency)
+        {
+            var loggedUserId = _identity.UserId;
+            var usersIds = await GetAllUsersRelatedToTheMoneyExchangeWithTheUserAsync(loggedUserId);
+            var resultList = new List<CashBalanceDTO>();
+            foreach (var userId in usersIds)
+            {
+                resultList.Add(await GetMoneyTransferBalanceBetweenUsersAsync(userId));
+            }
+            return resultList;
+        }
+
+        public async Task<CashBalanceDTO> GetMoneyTransferBalanceBetweenUsersAsync(string userId)
+        {
+            var loggedUserId = _identity.UserId;
+            var checkingUser = await _userManager.FindByIdAsync(userId);
+            var result = new CashBalanceDTO()
+            {
+                UserId = userId,
+                FirstName = checkingUser.FirstName,
+                LastName = checkingUser.LastName,
+                Balances = new Dictionary<string, double>()
+            };
+            //to do
+            var incomeFromSettlements =await _context.ProductSettlements
+                .Include(ps => ps.Settlement).Where(ps => ps.Settlement.UserId == loggedUserId && ps.UserId == userId)
+                .Select(ps => new { ps.Currency, ps.Amount }).ToListAsync();
+            foreach (var item in incomeFromSettlements)
+            {
+                if (result.Balances.ContainsKey(item.Currency))
+                    result.Balances[item.Currency]+=item.Amount;
+                else
+                    result.Balances.Add(item.Currency, item.Amount);
+            }
+
+            var cashOweFromSettlements = await _context.ProductSettlements
+                .Include(ps=>ps.Settlement).Where(ps=>ps.Settlement.UserId==userId && ps.UserId == loggedUserId)
+                .Select(ps=> new { ps.Currency , ps.Amount }).ToListAsync();
+            foreach (var item in cashOweFromSettlements)
+            {
+                if(result.Balances.ContainsKey(item.Currency))
+                    result.Balances[item.Currency]-=item.Amount;
+                else
+                    result.Balances.Add(item.Currency,-item.Amount);
+            }
+
+            var cashOweFromTransfers = await _context.MoneyTransfers
+                .Where(mt=>mt.SenderId==userId && mt.ReceiverId==loggedUserId && mt.TransferRequestFlag==TransferRequestFlag.Accepted)
+                .Select(mt=> new {mt.Currency, mt.Amount}).ToListAsync();
+            foreach (var item in cashOweFromTransfers)
+            {
+                if (result.Balances.ContainsKey(item.Currency))
+                    result.Balances[item.Currency] += item.Amount;
+                else
+                    result.Balances.Add(item.Currency, item.Amount);
+            }
+
+            var cashBackToUserTransfers =await _context.MoneyTransfers
+                .Where(mt => mt.SenderId == loggedUserId && mt.ReceiverId == userId && mt.TransferRequestFlag == TransferRequestFlag.Accepted)
+                .Select(mt => new { mt.Currency, mt.Amount }).ToListAsync();
+            foreach (var item in cashBackToUserTransfers)
+            {
+                if (result.Balances.ContainsKey(item.Currency))
+                    result.Balances[item.Currency] -= item.Amount;
+                else
+                    result.Balances.Add(item.Currency, -item.Amount);
+            }
+
+            foreach(var key in result.Balances.Keys)
+            {
+                result.Balances[key] = Math.Round(result.Balances[key], 2);
+            }
+
+            return result;
+        }
+
+        public async Task<List<string>> GetAllUsersRelatedToTheMoneyExchangeWithTheUserAsync(string userId)
+        {
+            var users = await _context.Settlements
+                .Where(s => s.UserId != userId)
+                .Include(s => s.ProductSettlementList.Where(ps => ps.UserId == userId))
+                .Select(s => s.UserId).Distinct().ToListAsync();
+            
+            var usersWhoOweloggedUser = await _context.ProductSettlements
+                .Where(ps => ps.UserId != userId)
+                .Include(ps => ps.Settlement)
+                .Where(ps => ps.Settlement.UserId == userId)
+                .Select(ps => ps.UserId).Distinct().ToListAsync();
+            users.AddRange(usersWhoOweloggedUser);
+
+            var usersFromMoneyTransfer =await _context.MoneyTransfers
+                .Where(mt=>(mt.SenderId==userId || mt.ReceiverId==userId) && mt.TransferRequestFlag==TransferRequestFlag.Accepted)
+                .Select(mt=>mt.ReceiverId).Distinct().ToListAsync();
+            users.AddRange(usersFromMoneyTransfer);
+            var usersFromMoneyTransfer2 = await _context.MoneyTransfers
+                .Where(mt => (mt.SenderId == userId || mt.ReceiverId == userId) && mt.TransferRequestFlag==TransferRequestFlag.Accepted)
+                .Select(mt => mt.SenderId).Distinct().ToListAsync();
+            users.AddRange(usersFromMoneyTransfer2);
+
+            while (users.Remove(userId) != false)
+            {
+                users.Remove(userId);
+            }
+            
+            return users.Distinct().ToList();
+        }
+
+       
     }
 }
